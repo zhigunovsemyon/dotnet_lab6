@@ -53,10 +53,9 @@ public class Class : IValidatable
 	public int LabWorks { get; set; } = 0;
 
 	public override string ToString ()
-		=> $"{Name}: лекций:{Lections}, " +
-			$"практик {Practices}, " +
-			$"лабораторных работ {LabWorks}";
-
+		=> $"{this.Name}: лекции:{this.Lections}, " +
+			$"практические работы: {this.Practices}, " +
+			$"лабораторные работы: {this.LabWorks}";
 
 	/// <summary> Создаёт копию данного занятия </summary>
 	/// <returns>Идентичное независимое занятие</returns>
