@@ -70,18 +70,6 @@ public partial class FormMain : Form
 			return;
 		}
 
-		if (form.Plan == null) {
-			MessageBox.Show(
-				"PlanEditForm вернула null",
-				"Внутренняя ошибка"
-			);
-			return;
-		}
-		if (!form.Plan.IsValid) {
-			MessageBox.Show("Неправильно указаны данные!");
-			return;
-		}
-
 		Journal.Get.AddPlan(form.Plan);
 		this.UpdatePlanListView();
 	}

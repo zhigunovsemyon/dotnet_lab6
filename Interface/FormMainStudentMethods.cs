@@ -23,18 +23,6 @@ public partial class FormMain : Form
 			return;
 		}
 
-		if (form.Student == null) {
-			MessageBox.Show(
-				"StudentEditForm вернула null",
-				"Внутренняя ошибка"
-			);
-			return;
-		}
-		if (!form.Student.IsValid) {
-			MessageBox.Show("Неправильно указаны данные!");
-			return;
-		}
-
 		Journal.Get.AddStudent(form.Student);
 		UpdateStudentListView();
 	}
