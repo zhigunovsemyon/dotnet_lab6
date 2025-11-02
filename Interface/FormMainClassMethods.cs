@@ -35,7 +35,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		Journal.ListClasses[form.Class.Id] = form.Class;
+		Journal.Get.AddClass(form.Class);
 		UpdateClassListView();
 	}
 	/// <summary> Обработчик создания нового занятия </summary>
@@ -58,8 +58,8 @@ public partial class FormMain : Form
 	{
 		this.listViewClasses.Items.Clear();
 
-		foreach (var kvPair in Journal.ListClasses) {
-			this.listViewClasses.Items.Add(CreateClassListViewItem(kvPair.Value));
+		foreach (var item in Journal.Get.ListClasses) {
+			this.listViewClasses.Items.Add(CreateClassListViewItem(item));
 		}
 	}
 

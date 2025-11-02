@@ -49,16 +49,16 @@ public partial class FormPlan : Form
 	/// <param name="e"></param>
 	private void FormPlan_SetBoxes (object sender, EventArgs e)
 	{
-		foreach (var kvPair in Journal.ListClasses) { 
-			var idx = this.comboBoxClasses.Items.Add(kvPair.Value);
-			if (kvPair.Value.Id == this.Plan.Class.Id){
+		foreach (var item in Journal.Get.ListClasses) { 
+			var idx = this.comboBoxClasses.Items.Add(item);
+			if (item.Id == this.Plan.Class.Id){
 				this.comboBoxClasses.SelectedIndex = idx;
 			}
 		}
 
-		foreach (var kvPair in Journal.ListStudents) {
-			var idx = this.comboBoxStudents.Items.Add(kvPair.Value);
-			if (kvPair.Value.Id == this.Plan.Student.Id) {
+		foreach (var item in Journal.Get.ListStudents) {
+			var idx = this.comboBoxStudents.Items.Add(item);
+			if (item.Id == this.Plan.Student.Id) {
 				this.comboBoxStudents.SelectedIndex = idx;
 			}
 		}
@@ -67,6 +67,6 @@ public partial class FormPlan : Form
 			this.comboBoxMarks.Items.Add(posMark);
 		}
 
-		this.comboBoxMarks.SelectedIndex = (int)this.Plan.Mark.Value;		
+		this.comboBoxMarks.SelectedIndex = (int)this.Plan.Mark.Value;
 	}
 }

@@ -5,16 +5,8 @@ namespace Interface;
 public partial class FormMain : Form
 {
 	/// <summary> Обработчик создания нового плана </summary>
-	private void PlanAddStripMenuItem_Click (object sender, EventArgs e)
-	{
-		var newPlan = AddOrEditPlan(new Electives.Plan());
-		if (newPlan == null) {
-			return;
-		}
-
-		Journal.ListPlans.Add(newPlan);
-		UpdatePlanListView();
-	}
+	private void PlanAddStripMenuItem_Click (object sender, EventArgs e) 
+		=> this.AddOrEditPlan(new Electives.Plan());
 
 	/// <summary> Обработчик редактирования плана </summary>
 	private void PlanEditStripMenuItem_Click (object sender, EventArgs e)
@@ -28,14 +20,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		var newPlan = AddOrEditPlan(origPlan.Clone());
-		if (newPlan == null) {
-			return;
-		}
-
-		Journal.ListPlans.Remove(origPlan);
-		Journal.ListPlans.Add(newPlan);
-		UpdatePlanListView();
+		this.AddOrEditPlan(origPlan.Clone());
 	}
 
 	/// <summary> Обработчик редактирования плана по двойному нажатию </summary>
@@ -55,14 +40,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		var newPlan = AddOrEditPlan(origPlan.Clone());
-		if (newPlan == null) {
-			return;
-		}
-
-		Journal.ListPlans.Remove(origPlan);
-		Journal.ListPlans.Add(newPlan);
-		UpdatePlanListView();
+		this.AddOrEditPlan(origPlan.Clone());
 	}
 
 	/// <summary>
@@ -70,14 +48,14 @@ public partial class FormMain : Form
 	/// </summary>
 	/// <param name="plan">Обрабатываемый план</param>
 	/// <returns> Изменённый план при успехе, null при неудаче </returns>
-	private static Electives.Plan? AddOrEditPlan (Electives.Plan? plan)
+	private void AddOrEditPlan (Electives.Plan? plan)
 	{
 		if (plan == null) {
 			MessageBox.Show(
 				"AddOrEditPlan: plan is null",
 				"Внутренняя ошибка"
 			);
-			return null;
+			return;
 		}
 
 		var form = new FormPlan(plan);
@@ -85,11 +63,11 @@ public partial class FormMain : Form
 
 		if (DialogResult.Retry == res) {
 			MessageBox.Show("Неправильно указаны данные!");
-			return null;
+			return;
 		}
 
 		if (DialogResult.OK != res) {
-			return null;
+			return;
 		}
 
 		if (form.Plan == null) {
@@ -97,21 +75,22 @@ public partial class FormMain : Form
 				"PlanEditForm вернула null",
 				"Внутренняя ошибка"
 			);
-			return null;
+			return;
 		}
 		if (!form.Plan.IsValid) {
 			MessageBox.Show("Неправильно указаны данные!");
-			return null;
+			return;
 		}
 
-		return form.Plan;
+		Journal.Get.AddPlan(form.Plan);
+		this.UpdatePlanListView();
 	}
 
 	private void UpdatePlanListView ()
 	{
 		this.listViewPlans.Items.Clear();
 
-		foreach (var plan in Journal.ListPlans) {
+		foreach (var plan in Journal.Get.ListPlans) {
 			this.listViewPlans.Items.Add(CreatePlanListViewItem(plan));
 		}
 	}

@@ -35,7 +35,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		Journal.ListStudents[form.Student.Id] = form.Student;
+		Journal.Get.AddStudent(form.Student);
 		UpdateStudentListView();
 	}
 
@@ -60,8 +60,8 @@ public partial class FormMain : Form
 	{
 		this.listViewStudents.Items.Clear();
 
-		foreach (var kvPair in Journal.ListStudents) {
-			this.listViewStudents.Items.Add(CreateStudentListViewItem(kvPair.Value));
+		foreach (var item in Journal.Get.ListStudents) {
+			this.listViewStudents.Items.Add(CreateStudentListViewItem(item));
 		}
 	}
 
