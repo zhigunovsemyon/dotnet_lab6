@@ -35,10 +35,7 @@ public class Journal
 
 	public void AddStudent(Electives.Student? student)
 	{
-		if (student == null){
-			throw new Exception.InvalidStudentException("student is null");
-		}
-		if (!student.IsValid){
+		if (student?.IsValid != true){
 			throw new Exception.InvalidStudentException("Неправильно указаны данные!");
 		}
 
@@ -47,10 +44,7 @@ public class Journal
 
 	public void AddClass (Electives.Class? @class)
 	{
-		if (@class == null) {
-			throw new Exception.InvalidClassException("class is null");
-		}
-		if (!@class.IsValid) { 
+		if (@class?.IsValid != true){
 			throw new Exception.InvalidClassException("Неправильно указаны данные!");
 		}
 
@@ -59,10 +53,7 @@ public class Journal
 
 	public void AddPlan (Electives.Plan? plan)
 	{
-		if (plan == null) {
-			throw new Exception.InvalidPlanException("plan is null");
-		}
-		if (!plan.IsValid) {
+		if (plan?.IsValid != true) {
 			throw new Exception.InvalidPlanException("Неправильно указаны данные!");
 		}
 
