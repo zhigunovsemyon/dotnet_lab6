@@ -51,7 +51,7 @@ public class Journal
 			throw new Exception.InvalidClassException("class is null");
 		}
 		if (!@class.IsValid) { 
-			throw new Exception.InvalidStudentException("Неправильно указаны данные!");
+			throw new Exception.InvalidClassException("Неправильно указаны данные!");
 		}
 
 		this._classes[@class.Id] = @class;
@@ -63,7 +63,7 @@ public class Journal
 			throw new Exception.InvalidPlanException("plan is null");
 		}
 		if (!plan.IsValid) {
-			throw new Exception.InvalidStudentException("Неправильно указаны данные!");
+			throw new Exception.InvalidPlanException("Неправильно указаны данные!");
 		}
 
 		// todo: так ли будем менять существующие записи?
