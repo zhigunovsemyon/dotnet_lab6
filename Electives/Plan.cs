@@ -42,7 +42,7 @@ public class Plan : IValidatable
 		this.Mark = new Mark();
 	}
 
-	public bool IsValid => Student.IsValid && Class.IsValid;
+	public bool IsValid => (Student?.IsValid ?? false) && (Class?.IsValid ?? false);
 
 	/// <summary> Создание копии текущего плана </summary>
 	/// <returns>Копия плана</returns>
