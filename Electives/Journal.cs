@@ -66,7 +66,7 @@ public class Journal
 			throw new Exception.InvalidPlanException("Неправильно указаны данные!");
 		}
 
-		// todo: так ли будем менять существующие записи?
+		// todo: так менять записи нельзя, старые не удаляются
 		this._plans.Remove(plan);
 		this._plans.Add(plan);
 	}
