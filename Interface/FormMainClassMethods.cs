@@ -23,7 +23,15 @@ public partial class FormMain : Form
 			return;
 		}
 
-		Journal.Get.AddClass(form.Class);
+		try{
+			Journal.Get.AddClass(form.Class);
+		}
+		catch (Electives.Exception.InvalidClassException ex) {
+			MessageBox.Show(
+				"Не удалось добавить элемент!\n" + ex.Message,
+				"Ошибка"
+			);
+		}
 		UpdateClassListView();
 	}
 	/// <summary> Обработчик создания нового занятия </summary>

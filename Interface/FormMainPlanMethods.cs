@@ -70,10 +70,19 @@ public partial class FormMain : Form
 			return;
 		}
 
-		Journal.Get.AddPlan(form.Plan);
+		try{
+			Journal.Get.AddPlan(form.Plan);
+		}
+		catch (Electives.Exception.InvalidPlanException ex) {
+			MessageBox.Show(
+				"Не удалось добавить элемент!\n" + ex.Message,
+				"Ошибка"
+			);
+		}
 		this.UpdatePlanListView();
 	}
 
+	//todo: коменты
 	private void UpdatePlanListView ()
 	{
 		this.listViewPlans.Items.Clear();

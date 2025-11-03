@@ -23,8 +23,16 @@ public partial class FormMain : Form
 			return;
 		}
 
-		Journal.Get.AddStudent(form.Student);
-		UpdateStudentListView();
+		try {
+			Journal.Get.AddStudent(form.Student);
+		}
+		catch (Electives.Exception.InvalidStudentException ex) {
+			MessageBox.Show(
+				"Не удалось добавить элемент!\n" + ex.Message,
+				"Ошибка"
+			);
+		}
+		this.UpdateStudentListView();
 	}
 
 	/// <summary> Обработчик поля создания нового студента </summary>
