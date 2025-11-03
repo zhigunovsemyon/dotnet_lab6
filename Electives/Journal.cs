@@ -35,12 +35,11 @@ public class Journal
 
 	public void AddStudent(Electives.Student? student)
 	{
-		//todo: InvalidStudentException
 		if (student == null){
-			throw new NotImplementedException("todo: InvalidStudentException");
+			throw new Exception.InvalidStudentException("student is null");
 		}
 		if (!student.IsValid){
-			throw new NotImplementedException("todo: InvalidStudentException");
+			throw new Exception.InvalidStudentException("student is invalid");
 		}
 
 		this._students[student.Id] =student;
@@ -48,12 +47,11 @@ public class Journal
 
 	public void AddClass (Electives.Class? @class)
 	{
-		//todo: InvalidClassException
 		if (@class == null) {
-			throw new NotImplementedException("todo: InvalidClassException");
+			throw new Exception.InvalidClassException("class is null");
 		}
 		if (!@class.IsValid) { 
-			throw new NotImplementedException("todo: InvalidClassException");
+			throw new Exception.InvalidClassException("class is invalid");
 		}
 
 		this._classes[@class.Id] = @class;
@@ -61,12 +59,11 @@ public class Journal
 
 	public void AddPlan (Electives.Plan? plan)
 	{
-		// todo: InvalidPlanException
 		if (plan == null) {
-			throw new NotImplementedException("todo: InvalidPlanException");
+			throw new Exception.InvalidPlanException("plan is null");
 		}
 		if (!plan.IsValid) {
-			throw new NotImplementedException("todo: InvalidPlanException");
+			throw new Exception.InvalidPlanException("plan is invalid");
 		}
 
 		// todo: так ли будем менять существующие записи?
