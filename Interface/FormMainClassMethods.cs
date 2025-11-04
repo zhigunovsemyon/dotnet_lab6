@@ -15,7 +15,7 @@ public partial class FormMain : Form
 				"AddOrEditClass: class is null",
 				"Внутренняя ошибка"
 			);
-			return;
+			throw new Electives.Exception.InvalidClassException("AddOrEditClass: class is null");
 		}
 
 		var form = new FormClass(@class);
@@ -23,7 +23,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		try{
+		try {
 			Journal.Get.AddClass(form.Class);
 		}
 		catch (Electives.Exception.InvalidClassException ex) {

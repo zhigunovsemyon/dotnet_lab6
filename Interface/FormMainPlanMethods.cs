@@ -55,7 +55,7 @@ public partial class FormMain : Form
 				"AddOrEditPlan: plan is null",
 				"Внутренняя ошибка"
 			);
-			return;
+			throw new Electives.Exception.InvalidPlanException("AddOrEditPlan: plan is null");
 		}
 
 		var form = new FormPlan(oldPlan.Clone());

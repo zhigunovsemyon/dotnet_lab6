@@ -15,7 +15,7 @@ public partial class FormMain : Form
 				"AddOrEditStudent: student is null",
 				"Внутренняя ошибка"
 			);
-			return;
+			throw new Electives.Exception.InvalidStudentException("AddOrEditStudent: student is null");
 		}
 
 		var form = new FormStudent(student);
