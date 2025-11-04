@@ -1,4 +1,5 @@
 ﻿using Electives;
+using System.Diagnostics;
 
 namespace Interface;
 
@@ -92,7 +93,28 @@ public partial class FormMain : Form
 			MessageBox.Show("selected list item is not student");
 			return;
 		}
-		;
+		
 		this.AddOrEditStudent(student.Clone());
+	}
+
+	private void listViewStudents_KeyUp (object sender, KeyEventArgs e)
+	{
+		if (e.KeyCode != Keys.Delete) {
+			return;
+		}
+
+		var lvStudents = sender as ListView ?? throw new InvalidCastException("listViewStudents_KeyUp sender must be ListView");
+		if (lvStudents.SelectedItems.Count <= 0) {
+			return;
+		}
+		Debug.Assert(lvStudents.SelectedItems.Count == 1);
+
+		var student = lvStudents.SelectedItems[0].Tag as Electives.Student ?? throw new InvalidCastException { };
+		if (VerifyDeletion(student.ToString()) != DialogResult.Yes) {
+			return;
+		}
+
+		Journal.Get.RemoveStudent(student);
+		this.UpdateStudentListView();
 	}
 }

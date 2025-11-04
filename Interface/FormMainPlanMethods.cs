@@ -121,6 +121,7 @@ public partial class FormMain : Form
 			return;
 		}
 
+		//todo: очистка формы от планов по удалению элементов из плана (вероятно закроется ивентами)
 		Journal.Get.RemovePlan(plan);
 		this.UpdatePlanListView();
 	}
