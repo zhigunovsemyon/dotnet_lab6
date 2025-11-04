@@ -14,13 +14,13 @@ public class Journal
 
 
 	/// <summary> Список студентов </summary>
-	private Dictionary<int, Electives.Student> _students = [];
+	private readonly Dictionary<int, Electives.Student> _students = [];
 
 	/// <summary> Список занятий </summary>
-	private Dictionary<int, Electives.Class> _classes = [];
+	private readonly Dictionary<int, Electives.Class> _classes = [];
 
 	/// <summary> Список планов </summary>
-	private List<Electives.Plan> _plans = [];
+	private readonly List<Electives.Plan> _plans = [];
 
 
 	/// <summary> Коллекция студентов </summary>
@@ -33,11 +33,11 @@ public class Journal
 	public IEnumerable<Electives.Plan> ListPlans => _plans;
 
 	/// <summary> Ивент, возникающий по добавлении студента</summary>
-	public event EventHandler? StudentAdded;
+	public event EventHandler? StudentAdded = null;
 
 	/// <summary> Ивент, возникающий по удалении студента </summary>
 	public event EventHandler? StudentRemoved = null;
-	
+
 	/// <summary> Ивент, возникающий по добавлении предмета</summary>
 	public event EventHandler? ClassAdded = null;
 
