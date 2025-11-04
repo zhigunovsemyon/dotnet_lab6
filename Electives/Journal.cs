@@ -32,6 +32,24 @@ public class Journal
 	/// <summary> Коллекция планов </summary>
 	public IEnumerable<Electives.Plan> ListPlans => _plans;
 
+	/// <summary> Ивент, возникающий по добавлении студента</summary>
+	public event EventHandler? StudentAdded;
+
+	/// <summary> Ивент, возникающий по удалении студента </summary>
+	public event EventHandler? StudentRemoved = null;
+	
+	/// <summary> Ивент, возникающий по добавлении предмета</summary>
+	public event EventHandler? ClassAdded = null;
+
+	/// <summary> Ивент, возникающий по удалении предмета</summary>
+	public event EventHandler? ClassRemoved = null;
+	
+	/// <summary> Ивент, возникающий по добавлении учебного плана</summary>
+	public event EventHandler? PlanAdded = null;
+
+	/// <summary> Ивент, возникающий по удалении учебного плана</summary>
+	public event EventHandler? PlanRemoved = null;
+
 
 	/// <summary> Добавление нового студента в коллекцию </summary>
 	/// <param name="student">Добавляемый студент</param>
@@ -43,6 +61,12 @@ public class Journal
 		}
 
 		this._students[student.Id] = student;
+		try {
+			this.StudentAdded?.Invoke(student, EventArgs.Empty);
+		}
+		catch (System.Exception ex) {
+			throw new Exception.InvalidStudentException("При добавлении студента возникла ошибка!", ex);
+		}
 	}
 
 	/// <summary> Добавление нового предмета в коллекцию </summary>
@@ -55,6 +79,12 @@ public class Journal
 		}
 
 		this._classes[@class.Id] = @class;
+		try {
+			this.ClassAdded?.Invoke(@class, EventArgs.Empty);
+		}
+		catch (System.Exception ex) {
+			throw new Exception.InvalidClassException("При добавлении предмета возникла ошибка!", ex);
+		}
 	}
 
 	/// <summary> Добавление нового учебного плана в коллекцию </summary>
@@ -67,6 +97,12 @@ public class Journal
 		}
 
 		this._plans.Add(plan);
+		try {
+			this.PlanAdded?.Invoke(plan, EventArgs.Empty);
+		}
+		catch (System.Exception ex) {
+			throw new Exception.InvalidPlanException("При добавлении плана возникла ошибка!", ex);
+		}
 	}
 
 	/// <summary> Удаление неактуального учебного плана </summary>
@@ -74,6 +110,7 @@ public class Journal
 	public void RemovePlan (Electives.Plan? plan)
 	{
 		if (plan != null) {
+			this.PlanRemoved?.Invoke(plan, EventArgs.Empty);
 			this._plans.Remove(plan);
 		}
 	}
@@ -93,6 +130,7 @@ public class Journal
 		foreach ( var item in plansToDelete ) {
 			this.RemovePlan(item);
 		}
+		this.ClassRemoved?.Invoke(@class, EventArgs.Empty);
 	}
 
 	/// <summary> Удаление неактуального студента с очисткой планов </summary>
@@ -110,5 +148,6 @@ public class Journal
 		foreach ( var item in plansToDelete ) {
 			this.RemovePlan(item);
 		}
+		this.StudentRemoved?.Invoke(student, EventArgs.Empty);
 	}
 }
