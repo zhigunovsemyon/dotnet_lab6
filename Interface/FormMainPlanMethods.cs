@@ -5,7 +5,7 @@ namespace Interface;
 public partial class FormMain : Form
 {
 	/// <summary> Обработчик создания нового плана </summary>
-	private void PlanAddStripMenuItem_Click (object sender, EventArgs e) 
+	private void PlanAddStripMenuItem_Click (object sender, EventArgs e)
 		=> this.AddOrEditPlan(new Electives.Plan());
 
 	/// <summary> Обработчик редактирования плана </summary>
@@ -20,7 +20,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		this.AddOrEditPlan(origPlan.Clone());
+		this.AddOrEditPlan(origPlan);
 	}
 
 	/// <summary> Обработчик редактирования плана по двойному нажатию </summary>
@@ -40,7 +40,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		this.AddOrEditPlan(origPlan.Clone());
+		this.AddOrEditPlan(origPlan);
 	}
 
 	/// <summary>
@@ -48,9 +48,9 @@ public partial class FormMain : Form
 	/// </summary>
 	/// <param name="plan">Обрабатываемый план</param>
 	/// <returns> Изменённый план при успехе, null при неудаче </returns>
-	private void AddOrEditPlan (Electives.Plan? plan)
+	private void AddOrEditPlan (Electives.Plan? oldPlan)
 	{
-		if (plan == null) {
+		if (oldPlan == null) {
 			MessageBox.Show(
 				"AddOrEditPlan: plan is null",
 				"Внутренняя ошибка"
@@ -58,7 +58,7 @@ public partial class FormMain : Form
 			return;
 		}
 
-		var form = new FormPlan(plan);
+		var form = new FormPlan(oldPlan.Clone());
 		DialogResult res = form.ShowDialog();
 
 		if (DialogResult.Retry == res) {
@@ -70,8 +70,9 @@ public partial class FormMain : Form
 			return;
 		}
 
-		try{
+		try {
 			Journal.Get.AddPlan(form.Plan);
+			Journal.Get.RemovePlan(oldPlan);
 		}
 		catch (Electives.Exception.InvalidPlanException ex) {
 			MessageBox.Show(
