@@ -27,10 +27,18 @@ public partial class FormPlan : Form
 	/// <param name="e"></param>
 	private void buttonOK_Click (object sender, EventArgs e)
 	{
-		// todo: разобраться с корректностью null присвоений		
-		this.Plan.Student = this.comboBoxStudents.SelectedItem as Electives.Student;
-		this.Plan.Class = this.comboBoxClasses.SelectedItem as Electives.Class;
-		this.Plan.Mark = this.comboBoxMarks.SelectedItem as Electives.Mark;
+		var selectedStudent = this.comboBoxStudents.SelectedItem as Electives.Student;
+		var selectedClass = this.comboBoxClasses.SelectedItem as Electives.Class;
+		var selectedMark = this.comboBoxMarks.SelectedItem as Electives.Mark;
+		if (null == selectedClass || selectedStudent == null|| selectedMark == null) {
+
+			this.DialogResult = DialogResult.Retry;
+			return;
+		}
+
+		this.Plan.Class = selectedClass;
+		this.Plan.Student = selectedStudent;
+		this.Plan.Mark = selectedMark;
 
 		this.DialogResult = DialogResult.OK;
 		this.Close();
