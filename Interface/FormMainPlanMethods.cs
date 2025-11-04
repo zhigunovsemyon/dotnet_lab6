@@ -1,4 +1,5 @@
 ﻿using Electives;
+using System.Diagnostics;
 
 namespace Interface;
 
@@ -101,5 +102,26 @@ public partial class FormMain : Form
 		item.SubItems.Add(plan.Mark.ToString());
 
 		return item;
+	}
+
+	private void listViewPlans_KeyUp (object sender, KeyEventArgs e)
+	{
+		if (e.KeyCode != Keys.Delete) {
+			return;
+		}
+
+		var lvPlans = sender as ListView ?? throw new InvalidCastException("listViewPlans_KeyUp sender must be ListView");
+		if (lvPlans.SelectedItems.Count <= 0) {
+			return;
+		}
+		Debug.Assert(lvPlans.SelectedItems.Count == 1);
+
+		var plan = lvPlans.SelectedItems[0].Tag as Electives.Plan ?? throw new NullReferenceException { };
+		if (VerifyDeletion(plan.ToString()) != DialogResult.Yes) {
+			return;
+		}
+
+		Journal.Get.RemovePlan(plan);
+		this.UpdatePlanListView();
 	}
 }
