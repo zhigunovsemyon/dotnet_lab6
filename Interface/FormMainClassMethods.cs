@@ -1,4 +1,5 @@
 ﻿using Electives;
+using System.Diagnostics;
 
 namespace Interface;
 
@@ -94,4 +95,24 @@ public partial class FormMain : Form
 		this.AddOrEditClass(@class);
 	}
 
+	private void listViewClasses_KeyUp (object sender, KeyEventArgs e)
+	{
+		if (e.KeyCode != Keys.Delete) {
+			return;
+		}
+
+		var lvClasses = sender as ListView ?? throw new InvalidCastException("listViewClasses_KeyUp sender must be ListView");
+		if (lvClasses.SelectedItems.Count <= 0) {
+			return;
+		}
+		Debug.Assert(lvClasses.SelectedItems.Count == 1);
+
+		var @class = lvClasses.SelectedItems[0].Tag as Electives.Class ?? throw new InvalidCastException { };
+		if (VerifyDeletion(@class.ToString()) != DialogResult.Yes) {
+			return;
+		}
+
+		Journal.Get.RemoveClass(@class);
+		this.UpdateClassListView();
+	}
 }
