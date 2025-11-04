@@ -33,6 +33,9 @@ public class Journal
 	public IEnumerable<Electives.Plan> ListPlans => _plans;
 
 
+	/// <summary> Добавление нового студента в коллекцию </summary>
+	/// <param name="student">Добавляемый студент</param>
+	/// <exception cref="Exception.InvalidStudentException">Ошибка в случае неправильных данных</exception>
 	public void AddStudent(Electives.Student? student)
 	{
 		if (student?.IsValid != true){
@@ -42,6 +45,9 @@ public class Journal
 		this._students[student.Id] =student;
 	}
 
+	/// <summary> Добавление нового предмета в коллекцию </summary>
+	/// <param name="class"> Добавляемый предмет </param>
+	/// <exception cref="Exception.InvalidClassException"> Ошибка в случае неправильных данных </exception>
 	public void AddClass (Electives.Class? @class)
 	{
 		if (@class?.IsValid != true){
@@ -51,6 +57,9 @@ public class Journal
 		this._classes[@class.Id] = @class;
 	}
 
+	/// <summary> Добавление нового учебного плана в коллекцию </summary>
+	/// <param name="plan"> Добавляемый план </param>
+	/// <exception cref="Exception.InvalidPlanException"> Ошибка в случае неправильных данных </exception>
 	public void AddPlan (Electives.Plan? plan)
 	{
 		if (plan?.IsValid != true) {
@@ -60,6 +69,8 @@ public class Journal
 		this._plans.Add(plan);
 	}
 
+	/// <summary> Удаление неактуального учебного плана </summary>
+	/// <param name="plan"> Удаляемый план </param>
 	public void RemovePlan (Electives.Plan? plan)
 	{
 		if (plan != null) {
