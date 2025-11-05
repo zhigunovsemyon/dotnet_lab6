@@ -5,7 +5,21 @@ namespace Interface;
 /// <summary> Основная форма </summary>
 public partial class FormMain : Form
 {
-	public FormMain () => this.InitializeComponent();
+	private FormPlan _formPlan = new();
+
+	public FormMain ()
+	{
+		this.InitializeComponent();
+
+		Journal.Get.PlanAdded += ItemAdded;
+		Journal.Get.PlanRemoved += ItemRemoved;
+
+		Journal.Get.StudentAdded += ItemAdded;
+		Journal.Get.StudentRemoved += ItemRemoved;
+
+		Journal.Get.ClassAdded += ItemAdded;
+		Journal.Get.ClassRemoved += ItemRemoved;
+	}
 
 	/// <summary> Метод для закрытия приложения через пункт меню </summary>
 	private void CloseButton_Click (object sender, EventArgs e) => this.Close();
@@ -15,4 +29,35 @@ public partial class FormMain : Form
 	/// <returns>Ответ пользователя</returns>
 	private static DialogResult VerifyDeletion (string item)
 		=> MessageBox.Show($"Удалить {item}?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+	private void ItemAdded(object? sender, EventArgs e)
+	{
+		_ = sender switch {
+			Electives.Plan => this.listViewPlans.Items.Add(CreatePlanListViewItem((Electives.Plan)sender)),
+			Electives.Student => this.listViewStudents.Items.Add(CreateStudentListViewItem((Electives.Student)sender)),
+			Electives.Class => this.listViewClasses.Items.Add(CreateClassListViewItem((Electives.Class)sender)),
+
+			null => throw new ArgumentNullException("FormMain.ItemAdded: sender is null"),
+			_ => throw new InvalidDataException("FormMain.ItemAdded: sender is unknown")
+		};		
+	}
+
+	private void ItemRemoved (object? sender, EventArgs e)
+	{
+		var lv = sender switch
+		{
+			Electives.Plan => this.listViewPlans,
+			Electives.Student => this.listViewStudents,
+			Electives.Class => this.listViewClasses,
+		
+			null => throw new ArgumentNullException("FormMain.ItemAdded: sender is null"),
+			_ => throw new InvalidDataException("FormMain.ItemAdded: sender is unknown")
+		};
+
+		for (int i = 0; i < lv.Items.Count; i++) {
+			if (lv.Items[i].Tag == sender){
+				lv.Items.RemoveAt(i);
+			}
+		}
+	}
 }

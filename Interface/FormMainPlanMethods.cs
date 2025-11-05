@@ -59,8 +59,8 @@ public partial class FormMain : Form
 			throw new Electives.Exception.InvalidPlanException("AddOrEditPlan: plan is null");
 		}
 
-		var form = new FormPlan(oldPlan.Clone());
-		DialogResult res = form.ShowDialog();
+		this._formPlan.Plan = oldPlan.Clone();
+		DialogResult res = this._formPlan.ShowDialog();
 
 		if (DialogResult.Retry == res) {
 			MessageBox.Show("Неправильно указаны данные!");
@@ -72,7 +72,7 @@ public partial class FormMain : Form
 		}
 
 		try {
-			Journal.Get.AddPlan(form.Plan);
+			Journal.Get.AddPlan(this._formPlan.Plan);
 			Journal.Get.RemovePlan(oldPlan);
 		}
 		catch (Electives.Exception.InvalidPlanException ex) {
@@ -81,19 +81,9 @@ public partial class FormMain : Form
 				"Ошибка"
 			);
 		}
-		this.UpdatePlanListView();
 	}
 
 	//todo: коменты
-	private void UpdatePlanListView ()
-	{
-		this.listViewPlans.Items.Clear();
-
-		foreach (var plan in Journal.Get.ListPlans) {
-			this.listViewPlans.Items.Add(CreatePlanListViewItem(plan));
-		}
-	}
-
 	private static ListViewItem CreatePlanListViewItem (Electives.Plan plan)
 	{
 		ListViewItem item = new() { Tag = plan, Text = plan.Student.ToString() };
@@ -123,6 +113,5 @@ public partial class FormMain : Form
 
 		//todo: очистка формы от планов по удалению элементов из плана (вероятно закроется ивентами)
 		Journal.Get.RemovePlan(plan);
-		this.UpdatePlanListView();
 	}
 }

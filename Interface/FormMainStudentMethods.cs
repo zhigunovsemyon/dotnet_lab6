@@ -33,7 +33,6 @@ public partial class FormMain : Form
 				"Ошибка"
 			);
 		}
-		this.UpdateStudentListView();
 	}
 
 	/// <summary> Обработчик поля создания нового студента </summary>
@@ -50,16 +49,6 @@ public partial class FormMain : Form
 		}
 		//Вызов формы на копии исходного студента
 		this.AddOrEditStudent(selectedItemsList[0].Tag as Electives.Student);
-	}
-
-	/// <summary> Обновление списка студентов в форме </summary>
-	private void UpdateStudentListView ()
-	{
-		this.listViewStudents.Items.Clear();
-
-		foreach (var item in Journal.Get.ListStudents) {
-			this.listViewStudents.Items.Add(CreateStudentListViewItem(item));
-		}
 	}
 
 	/// <summary> Создание записи со студентом для списка в форме </summary>
@@ -115,6 +104,5 @@ public partial class FormMain : Form
 		}
 
 		Journal.Get.RemoveStudent(student);
-		this.UpdateStudentListView();
 	}
 }

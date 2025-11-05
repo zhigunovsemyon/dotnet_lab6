@@ -33,7 +33,6 @@ public partial class FormMain : Form
 				"Ошибка"
 			);
 		}
-		UpdateClassListView();
 	}
 	/// <summary> Обработчик создания нового занятия </summary>
 	private void ClassAddStripMenuItem_Click (object sender, EventArgs e)
@@ -49,17 +48,6 @@ public partial class FormMain : Form
 		this.AddOrEditClass(listViewClasses.SelectedItems[0].Tag as Electives.Class);
 
 	}
-
-	/// <summary> Обновление списка занятий в форме </summary>
-	private void UpdateClassListView ()
-	{
-		this.listViewClasses.Items.Clear();
-
-		foreach (var item in Journal.Get.ListClasses) {
-			this.listViewClasses.Items.Add(CreateClassListViewItem(item));
-		}
-	}
-
 
 	/// <summary> Создание элемента списка занятий для формы </summary>
 	/// <param name="class">Предмет, из которого создаётся запись</param>
@@ -113,6 +101,5 @@ public partial class FormMain : Form
 		}
 
 		Journal.Get.RemoveClass(@class);
-		this.UpdateClassListView();
 	}
 }

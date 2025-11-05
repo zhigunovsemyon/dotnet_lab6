@@ -128,7 +128,6 @@
 			this.Name = "FormPlan";
 			this.ShowIcon = false;
 			this.Text = "Информация об учебном плане";
-			this.Load += this.FormPlan_SetBoxes;
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}

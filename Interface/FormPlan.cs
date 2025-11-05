@@ -1,19 +1,66 @@
 ﻿using Electives;
+using System.Diagnostics;
 
 namespace Interface;
 
 /// <summary> Форма редактирования плана </summary>
 public partial class FormPlan : Form
 {
+	public Electives.Plan? _plan;
+
 	/// <summary> Поле с редактируемым планом </summary>
-	public Electives.Plan Plan { get; init; }
+	public Electives.Plan? Plan
+	{
+		get => _plan;
+		set 
+		{
+			this._plan = value ?? throw new ArgumentNullException("FormPlan.Plan set: value is null");
+			this.comboBoxClasses.SelectedItem = this.Plan?.Class;
+			this.comboBoxStudents.SelectedItem = this.Plan?.Student;
+			this.comboBoxMarks.SelectedIndex = (int)(this.Plan?.Mark.Value ?? Mark.Type.None);
+		}
+	}
 
 	/// <summary> Конструктор </summary>
 	/// <param name="plan">Редактируемый план</param>
-	public FormPlan (Electives.Plan plan)
+	public FormPlan ()
 	{
-		this.Plan = plan;
 		this.InitializeComponent();
+
+		Journal.Get.StudentAdded += this.AddPossibleItem;
+		Journal.Get.ClassAdded += this.AddPossibleItem;
+		Journal.Get.StudentRemoved += this.RemoveInvalidItem;
+		Journal.Get.ClassRemoved += this.RemoveInvalidItem;
+
+		foreach (var pv in Electives.Mark.Types) { 
+			this.comboBoxMarks.Items.Add(pv);
+		}
+	}
+
+	private void RemoveInvalidItem (object? sender, EventArgs e)
+	{
+		var cbox = sender switch
+		{
+			Electives.Student => this.comboBoxStudents,
+			Electives.Class => this.comboBoxClasses,
+
+			null => throw new ArgumentNullException("AddPossibleItem: sender is null"),
+			_ => throw new InvalidDataException("AddPossibleItem: sender is unknown type")
+		};
+
+		cbox.Items.Remove(sender);
+	}
+
+	private void AddPossibleItem(object? sender, EventArgs e)
+	{
+		var cbox = sender switch
+		{
+			Electives.Student => this.comboBoxStudents,
+			Electives.Class => this.comboBoxClasses,
+			null => throw new ArgumentNullException("AddPossibleItem: sender is null"),
+			_ => throw new InvalidDataException("AddPossibleItem: sender is unknown type")
+		};
+		cbox.Items.Add(sender);
 	}
 
 	/// <summary> Обработчик нажатия кнопки "Закрыть" </summary>
@@ -30,10 +77,14 @@ public partial class FormPlan : Form
 		var selectedStudent = this.comboBoxStudents.SelectedItem as Electives.Student;
 		var selectedClass = this.comboBoxClasses.SelectedItem as Electives.Class;
 		var selectedMark = this.comboBoxMarks.SelectedItem as Electives.Mark;
-		if (null == selectedClass || selectedStudent == null|| selectedMark == null) {
+		if (null == selectedClass || selectedStudent == null || selectedMark == null) {
 
 			this.DialogResult = DialogResult.Retry;
 			return;
+		}
+
+		if (this.Plan is null){
+			this.Plan = new();
 		}
 
 		this.Plan.Class = selectedClass;
@@ -47,26 +98,26 @@ public partial class FormPlan : Form
 	/// <summary> Наполнение и установка элементов формы </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void FormPlan_SetBoxes (object sender, EventArgs e)
-	{
-		foreach (var item in Journal.Get.ListClasses) { 
-			var idx = this.comboBoxClasses.Items.Add(item);
-			if (item.Id == this.Plan.Class.Id){
-				this.comboBoxClasses.SelectedIndex = idx;
-			}
-		}
-
-		foreach (var item in Journal.Get.ListStudents) {
-			var idx = this.comboBoxStudents.Items.Add(item);
-			if (item.Id == this.Plan.Student.Id) {
-				this.comboBoxStudents.SelectedIndex = idx;
-			}
-		}
-
-		foreach (var posMark in Electives.Mark.Types){
-			this.comboBoxMarks.Items.Add(posMark);
-		}
-
-		this.comboBoxMarks.SelectedIndex = (int)this.Plan.Mark.Value;
-	}
+	//private void FormPlan_SetBoxes (object sender, EventArgs e)
+	//{
+	//	foreach (var item in Journal.Get.ListClasses) {
+	//		var idx = this.comboBoxClasses.Items.Add(item);
+	//		if (item.Id == this.Plan.Class.Id) {
+	//			this.comboBoxClasses.SelectedIndex = idx;
+	//		}
+	//	}
+	//
+	//	foreach (var item in Journal.Get.ListStudents) {
+	//		var idx = this.comboBoxStudents.Items.Add(item);
+	//		if (item.Id == this.Plan.Student.Id) {
+	//			this.comboBoxStudents.SelectedIndex = idx;
+	//		}
+	//	}
+	//
+	//	foreach (var posMark in Electives.Mark.Types) {
+	//		this.comboBoxMarks.Items.Add(posMark);
+	//	}
+	//
+	//	this.comboBoxMarks.SelectedIndex = (int)this.Plan.Mark.Value;
+	//}
 }
