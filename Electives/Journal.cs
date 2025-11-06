@@ -60,6 +60,7 @@ public class Journal
 			throw new Exception.InvalidStudentException("Неправильно указаны данные!");
 		}
 
+		//todo: замена в плане класса и студента без его сноса
 		this._students[student.Id] = student;
 		try {
 			this.StudentAdded?.Invoke(student, EventArgs.Empty);
@@ -78,6 +79,7 @@ public class Journal
 			throw new Exception.InvalidClassException("Неправильно указаны данные!");
 		}
 
+		//todo: замена в плане класса и студента без его сноса
 		this._classes[@class.Id] = @class;
 		try {
 			this.ClassAdded?.Invoke(@class, EventArgs.Empty);
