@@ -5,9 +5,9 @@ namespace Interface;
 /// <summary> Основная форма </summary>
 public partial class FormMain : Form
 {
-	private FormPlan _formPlan = new();
-	private FormClass _formClass = new();
-	private FormStudent _formStudent = new();
+	private readonly FormPlan _formPlan = new();
+	private readonly FormClass _formClass = new();
+	private readonly FormStudent _formStudent = new();
 
 	public FormMain ()
 	{
