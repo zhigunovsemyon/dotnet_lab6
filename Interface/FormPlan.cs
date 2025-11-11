@@ -83,10 +83,6 @@ public partial class FormPlan : Form
 			return;
 		}
 
-		if (this.Plan is null){
-			this.Plan = new();
-		}
-
 		this.Plan.Class = selectedClass;
 		this.Plan.Student = selectedStudent;
 		this.Plan.Mark = selectedMark;
