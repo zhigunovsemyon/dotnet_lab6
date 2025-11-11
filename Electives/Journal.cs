@@ -43,7 +43,7 @@ public class Journal
 
 	/// <summary> Ивент, возникающий по удалении предмета</summary>
 	public event EventHandler? ClassRemoved = null;
-	
+
 	/// <summary> Ивент, возникающий по добавлении учебного плана</summary>
 	public event EventHandler? PlanAdded = null;
 
@@ -52,37 +52,85 @@ public class Journal
 
 
 	/// <summary> Добавление нового студента в коллекцию </summary>
-	/// <param name="student">Добавляемый студент</param>
+	/// <param name="newStudent">Добавляемый студент</param>
 	/// <exception cref="Exception.InvalidStudentException">Ошибка в случае неправильных данных</exception>
-	public void AddStudent (Electives.Student? student)
+	public void AddStudent (Electives.Student? newStudent)
 	{
-		if (student?.IsValid != true) {
+		if (newStudent?.IsValid != true) {
 			throw new Exception.InvalidStudentException("Неправильно указаны данные!");
 		}
 
-		//todo: замена в плане класса и студента без его сноса
-		this._students[student.Id] = student;
 		try {
-			this.StudentAdded?.Invoke(student, EventArgs.Empty);
+			if (this._students.TryAdd(newStudent.Id, newStudent)) {
+				this.StudentAdded?.Invoke(newStudent, EventArgs.Empty);
+			} else {
+				var plansToUpdate = this._plans.FindAll(p => p.Student.Id == newStudent.Id).AsEnumerable();
+				var oldStudent = this._students[newStudent.Id];
+
+				this._students[newStudent.Id] = newStudent;
+				this.StudentAdded?.Invoke(newStudent, EventArgs.Empty);
+
+				UpdateStudentsInPlans(plansToUpdate, newStudent);
+
+				this.StudentRemoved?.Invoke(oldStudent, EventArgs.Empty);
+			}
 		}
 		catch (System.Exception ex) {
 			throw new Exception.InvalidStudentException("При добавлении студента возникла ошибка!", ex);
 		}
 	}
 
-	/// <summary> Добавление нового предмета в коллекцию </summary>
-	/// <param name="class"> Добавляемый предмет </param>
-	/// <exception cref="Exception.InvalidClassException"> Ошибка в случае неправильных данных </exception>
-	public void AddClass (Electives.Class? @class)
+	/// <summary> Обновление всех планов, содержащих заменённого студента </summary>
+	/// <param name="plansToUpdate"></param>
+	/// <param name="newStudent"></param>
+	private static void UpdateStudentsInPlans(IEnumerable<Electives.Plan> plansToUpdate, Electives.Student newStudent)
 	{
-		if (@class?.IsValid != true) {
+		foreach (var oldPlan in plansToUpdate) { 
+			var updatedPlan = oldPlan.Clone();
+			updatedPlan.Student = newStudent;
+
+			Journal.Get.AddPlan(updatedPlan);
+			Journal.Get.RemovePlan(oldPlan);
+		}
+	}
+
+	/// <summary> Обновление всех планов, содержащих заменённый предмет </summary>
+	/// <param name="plansToUpdate"></param>
+	/// <param name="newClass"></param>
+	private static void UpdateClassesInPlans(IEnumerable<Electives.Plan> plansToUpdate, Electives.Class newClass)
+	{
+		foreach (var oldPlan in plansToUpdate) { 
+			var updatedPlan = oldPlan.Clone();
+			updatedPlan.Class = newClass;
+
+			Journal.Get.AddPlan(updatedPlan);
+			Journal.Get.RemovePlan(oldPlan);
+		}
+	}
+
+	/// <summary> Добавление нового предмета в коллекцию </summary>
+	/// <param name="newClass"> Добавляемый предмет </param>
+	/// <exception cref="Exception.InvalidClassException"> Ошибка в случае неправильных данных </exception>
+	public void AddClass (Electives.Class? newClass)
+	{
+		if (newClass?.IsValid != true) {
 			throw new Exception.InvalidClassException("Неправильно указаны данные!");
 		}
 
-		//todo: замена в плане класса и студента без его сноса
-		this._classes[@class.Id] = @class;
 		try {
-			this.ClassAdded?.Invoke(@class, EventArgs.Empty);
+			if (this._classes.TryAdd(newClass.Id, newClass)){
+				this.ClassAdded?.Invoke(newClass, EventArgs.Empty);
+			} else {
+				var plansToUpdate = this._plans.FindAll(p => p.Class.Id == newClass.Id).AsEnumerable();
+				var oldClass= this._classes[newClass.Id];
+
+				this._classes[newClass.Id] = newClass;
+				this.ClassAdded?.Invoke(newClass, EventArgs.Empty);
+
+				UpdateClassesInPlans(plansToUpdate, newClass);
+
+				this.ClassRemoved?.Invoke(oldClass, EventArgs.Empty);
+			}
 		}
 		catch (System.Exception ex) {
 			throw new Exception.InvalidClassException("При добавлении предмета возникла ошибка!", ex);
@@ -128,8 +176,8 @@ public class Journal
 		this._classes.Remove(@class.Id);
 
 		//todo: проверить на корректность (в примере обращаются через ListPlans, используется for loop)
-		var plansToDelete = this._plans.FindAll( item => item.Class.Id == @class.Id);
-		foreach ( var item in plansToDelete ) {
+		var plansToDelete = this._plans.FindAll(item => item.Class.Id == @class.Id);
+		foreach (var item in plansToDelete) {
 			this.RemovePlan(item);
 		}
 		this.ClassRemoved?.Invoke(@class, EventArgs.Empty);
@@ -146,8 +194,8 @@ public class Journal
 		this._students.Remove(student.Id);
 
 		//todo: проверить на корректность (в примере обращаются через ListPlans, используется for loop)
-		var plansToDelete = this._plans.FindAll( item => item.Student.Id == student.Id);
-		foreach ( var item in plansToDelete ) {
+		var plansToDelete = this._plans.FindAll(item => item.Student.Id == student.Id);
+		foreach (var item in plansToDelete) {
 			this.RemovePlan(item);
 		}
 		this.StudentRemoved?.Invoke(student, EventArgs.Empty);
