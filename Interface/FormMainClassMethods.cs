@@ -19,7 +19,8 @@ public partial class FormMain : Form
 			throw new Electives.Exception.InvalidClassException("AddOrEditClass: class is null");
 		}
 
-		var form = new FormClass(@class);
+		var form = _formClass;
+		form.Class = @class;
 		if (DialogResult.OK != form.ShowDialog()) {
 			return;
 		}

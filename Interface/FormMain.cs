@@ -6,6 +6,7 @@ namespace Interface;
 public partial class FormMain : Form
 {
 	private FormPlan _formPlan = new();
+	private FormClass _formClass = new();
 
 	public FormMain ()
 	{
@@ -35,16 +36,17 @@ public partial class FormMain : Form
 	/// <param name="e"></param>
 	/// <exception cref="ArgumentNullException">При sender null</exception>
 	/// <exception cref="InvalidDataException">При sender неправильного типа</exception>
-	private void ItemAdded(object? sender, EventArgs e)
+	private void ItemAdded (object? sender, EventArgs e)
 	{
-		_ = sender switch {
+		_ = sender switch
+		{
 			Electives.Plan => this.listViewPlans.Items.Add(CreatePlanListViewItem((Electives.Plan)sender)),
 			Electives.Student => this.listViewStudents.Items.Add(CreateStudentListViewItem((Electives.Student)sender)),
 			Electives.Class => this.listViewClasses.Items.Add(CreateClassListViewItem((Electives.Class)sender)),
 
 			null => throw new ArgumentNullException("FormMain.ItemAdded: sender is null"),
 			_ => throw new InvalidDataException("FormMain.ItemAdded: sender is unknown")
-		};		
+		};
 	}
 
 	/// <summary> Удаление элемента элемента из соответствующего списка формы </summary>
@@ -59,13 +61,13 @@ public partial class FormMain : Form
 			Electives.Plan => this.listViewPlans,
 			Electives.Student => this.listViewStudents,
 			Electives.Class => this.listViewClasses,
-		
+
 			null => throw new ArgumentNullException("FormMain.ItemAdded: sender is null"),
 			_ => throw new InvalidDataException("FormMain.ItemAdded: sender is unknown")
 		};
 
 		for (int i = 0; i < lv.Items.Count; i++) {
-			if (lv.Items[i].Tag == sender){
+			if (lv.Items[i].Tag == sender) {
 				lv.Items.RemoveAt(i);
 			}
 		}
