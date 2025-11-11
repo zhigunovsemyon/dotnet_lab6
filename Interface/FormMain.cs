@@ -30,6 +30,11 @@ public partial class FormMain : Form
 	private static DialogResult VerifyDeletion (string item)
 		=> MessageBox.Show($"Удалить {item}?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+	/// <summary> Добавление нового элемента в нужные списки формы </summary>
+	/// <param name="sender">Новый элемент</param>
+	/// <param name="e"></param>
+	/// <exception cref="ArgumentNullException">При sender null</exception>
+	/// <exception cref="InvalidDataException">При sender неправильного типа</exception>
 	private void ItemAdded(object? sender, EventArgs e)
 	{
 		_ = sender switch {
@@ -42,6 +47,11 @@ public partial class FormMain : Form
 		};		
 	}
 
+	/// <summary> Удаление элемента элемента из соответствующего списка формы </summary>
+	/// <param name="sender">Удаляемый элемент</param>
+	/// <param name="e"></param>
+	/// <exception cref="ArgumentNullException">При sender null</exception>
+	/// <exception cref="InvalidDataException">При sender неправильного типа</exception>
 	private void ItemRemoved (object? sender, EventArgs e)
 	{
 		var lv = sender switch
