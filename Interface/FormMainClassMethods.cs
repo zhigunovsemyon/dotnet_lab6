@@ -83,6 +83,11 @@ public partial class FormMain : Form
 		this.AddOrEditClass(@class);
 	}
 
+	/// <summary> Ивент для нажатия на клавишу Delete в окне предметов </summary>
+	/// <param name="sender">ListView с предметами</param>
+	/// <param name="e">Нажатая клавиша</param>
+	/// <exception cref="InvalidCastException">При элементе e, отличном от ListVIew</exception>
+	/// <exception cref="NullReferenceException">Если Tag выбранного элемента не Electives.Class</exception>
 	private void listViewClasses_KeyUp (object sender, KeyEventArgs e)
 	{
 		if (e.KeyCode != Keys.Delete) {

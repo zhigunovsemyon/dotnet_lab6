@@ -83,7 +83,9 @@ public partial class FormMain : Form
 		}
 	}
 
-	//todo: коменты
+	/// <summary> Вспомогательная функция для создания элемента списка планов из данного плана </summary>
+	/// <param name="plan">План</param>
+	/// <returns>Элемент списка планов для ListView</returns>
 	private static ListViewItem CreatePlanListViewItem (Electives.Plan plan)
 	{
 		ListViewItem item = new() { Tag = plan, Text = plan.Student.ToString() };
@@ -94,6 +96,11 @@ public partial class FormMain : Form
 		return item;
 	}
 
+	/// <summary> Ивент для нажатия на клавишу Delete в окне планов </summary>
+	/// <param name="sender">ListView с планами</param>
+	/// <param name="e">Нажатая клавиша</param>
+	/// <exception cref="InvalidCastException">При элементе e, отличном от ListVIew</exception>
+	/// <exception cref="NullReferenceException">Если Tag выбранного элемента не Electives.Plan</exception>
 	private void listViewPlans_KeyUp (object sender, KeyEventArgs e)
 	{
 		if (e.KeyCode != Keys.Delete) {
@@ -111,7 +118,6 @@ public partial class FormMain : Form
 			return;
 		}
 
-		//todo: очистка формы от планов по удалению элементов из плана (вероятно закроется ивентами)
 		Journal.Get.RemovePlan(plan);
 	}
 }

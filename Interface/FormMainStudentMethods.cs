@@ -86,6 +86,11 @@ public partial class FormMain : Form
 		this.AddOrEditStudent(student.Clone());
 	}
 
+	/// <summary> Ивент для нажатия на клавишу Delete в окне студентов </summary>
+	/// <param name="sender">ListView со студентами</param>
+	/// <param name="e">Нажатая клавиша</param>
+	/// <exception cref="InvalidCastException">При элементе e, отличном от ListVIew</exception>
+	/// <exception cref="NullReferenceException">Если Tag выбранного элемента не Electives.Student</exception>
 	private void listViewStudents_KeyUp (object sender, KeyEventArgs e)
 	{
 		if (e.KeyCode != Keys.Delete) {
