@@ -7,6 +7,7 @@ public partial class FormMain : Form
 {
 	private FormPlan _formPlan = new();
 	private FormClass _formClass = new();
+	private FormStudent _formStudent = new();
 
 	public FormMain ()
 	{

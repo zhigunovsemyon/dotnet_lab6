@@ -6,18 +6,18 @@ namespace Interface;
 /// <summary> Форма редактирования плана </summary>
 public partial class FormPlan : Form
 {
-	public Electives.Plan? _plan;
+	public Electives.Plan _plan = new();
 
 	/// <summary> Поле с редактируемым планом </summary>
-	public Electives.Plan? Plan
+	public Electives.Plan Plan
 	{
 		get => _plan;
 		set 
 		{
-			this._plan = value ?? throw new ArgumentNullException("FormPlan.Plan set: value is null");
-			this.comboBoxClasses.SelectedItem = this.Plan?.Class;
-			this.comboBoxStudents.SelectedItem = this.Plan?.Student;
-			this.comboBoxMarks.SelectedIndex = (int)(this.Plan?.Mark.Value ?? Mark.Type.None);
+			this._plan = value;
+			this.comboBoxClasses.SelectedItem = this.Plan.Class;
+			this.comboBoxStudents.SelectedItem = this.Plan.Student;
+			this.comboBoxMarks.SelectedIndex = (int)(this.Plan.Mark.Value);
 		}
 	}
 

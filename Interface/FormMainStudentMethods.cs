@@ -19,7 +19,8 @@ public partial class FormMain : Form
 			throw new Electives.Exception.InvalidStudentException("AddOrEditStudent: student is null");
 		}
 
-		var form = new FormStudent(student);
+		var form = this._formStudent;
+		form.Student = student;
 		if (DialogResult.OK != form.ShowDialog()) {
 			return;
 		}
