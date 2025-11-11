@@ -1,4 +1,6 @@
-﻿namespace Electives;
+﻿using System.Diagnostics;
+
+namespace Electives;
 
 /// <summary>
 /// Учебный план для студента по предмету
@@ -19,7 +21,7 @@ public class Plan : IValidatable
 	/// <summary>
 	/// Конструктор пустого плана. Содержит пустого студента и занятие.
 	/// </summary>
-	public Plan () { }
+	public Plan () {}
 
 	/// <summary>Конструктор плана с уже заданной оценкой</summary>
 	/// <param name="student">Студент</param>
@@ -30,6 +32,9 @@ public class Plan : IValidatable
 		this.Student = student;
 		this.Class = @class;
 		this.Mark = mark;
+
+		Journal.Get.ClassRemoved += this.ClassChangedOrRemoved;
+		Journal.Get.StudentRemoved += this.StudentChangedOrRemoved;
 	}
 
 	/// <summary>Конструктор плана без оценки</summary>
@@ -40,6 +45,9 @@ public class Plan : IValidatable
 		this.Student = student;
 		this.Class = @class;
 		this.Mark = new Mark();
+
+		Journal.Get.ClassRemoved += this.ClassChangedOrRemoved;
+		Journal.Get.StudentRemoved += this.StudentChangedOrRemoved;
 	}
 
 	public bool IsValid => (Student?.IsValid ?? false) && (Class?.IsValid ?? false);
@@ -47,4 +55,71 @@ public class Plan : IValidatable
 	/// <summary> Создание копии текущего плана </summary>
 	/// <returns>Копия плана</returns>
 	public Plan Clone () => new(Student.Clone(), Class.Clone(), new Mark(this.Mark.Value));
+
+	/// <summary> Проверка на наличие обновлённого студента в списке </summary>
+	/// <param name="sender"> Старый студент (Electives.Student) </param>
+	/// <param name="e"></param>
+	/// <exception cref="ArgumentException"></exception>
+	public void StudentChangedOrRemoved (object? sender, EventArgs e)
+	{
+		var oldStudent = sender as Electives.Student ?? 
+			throw new ArgumentException("Plan.StudentChangedOrRemoved: sender null or not Student");
+
+		if (this.Student.Id != oldStudent.Id) {
+			return;
+		}
+
+		var journal = Journal.Get;
+		var newStudent = FindNewStudent(journal.ListStudents, oldStudent.Id);
+
+		if (newStudent is not null) {
+			var newPlan = this.Clone();
+			newPlan.Student = newStudent;
+			journal.AddPlan(newPlan);
+		}
+		journal.RemovePlan(this);
+	}
+
+	/// <summary> Проверка на наличие обновлённого предмета в списке </summary>
+	/// <param name="sender"> Старый предмет (Electives.Class) </param>
+	/// <param name="e"></param>
+	/// <exception cref="ArgumentException"></exception>
+	public void ClassChangedOrRemoved (object? sender, EventArgs e)
+	{
+		var oldClass = sender as Electives.Class ?? 
+			throw new ArgumentException("Plan.ClassChangedOrRemoved: sender null or not Class");
+
+		if (this.Class.Id != oldClass.Id) {
+			return;
+		}
+
+		var journal = Journal.Get;
+		var newClass = FindNewClass(journal.ListClasses, oldClass.Id);
+
+		if (newClass is not null) {
+			var newPlan = this.Clone();
+			newPlan.Class = newClass;
+			journal.AddPlan(newPlan);
+		}
+		journal.RemovePlan(this);
+	}
+
+	private static Student? FindNewStudent (IEnumerable<Student> students, int id)
+	{
+		foreach (var student in students) {
+			if (student.Id == id) {
+				return student;
+			}
+		}
+		return null;
+	}
+	private static Class? FindNewClass (IEnumerable<Class> classes, int id)
+	{
+		foreach (var @class in classes) {
+			if (@class.Id == id) {
+				return @class;
+			}
+		}
+		return null;
+	}
 }

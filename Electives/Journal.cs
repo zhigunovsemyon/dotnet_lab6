@@ -64,47 +64,15 @@ public class Journal
 			if (this._students.TryAdd(newStudent.Id, newStudent)) {
 				this.StudentAdded?.Invoke(newStudent, EventArgs.Empty);
 			} else {
-				var plansToUpdate = this._plans.FindAll(p => p.Student.Id == newStudent.Id).AsEnumerable();
 				var oldStudent = this._students[newStudent.Id];
-
 				this._students[newStudent.Id] = newStudent;
+
 				this.StudentAdded?.Invoke(newStudent, EventArgs.Empty);
-
-				UpdateStudentsInPlans(plansToUpdate, newStudent);
-
 				this.StudentRemoved?.Invoke(oldStudent, EventArgs.Empty);
 			}
 		}
 		catch (System.Exception ex) {
 			throw new Exception.InvalidStudentException("При добавлении студента возникла ошибка!", ex);
-		}
-	}
-
-	/// <summary> Обновление всех планов, содержащих заменённого студента </summary>
-	/// <param name="plansToUpdate"></param>
-	/// <param name="newStudent"></param>
-	private static void UpdateStudentsInPlans(IEnumerable<Electives.Plan> plansToUpdate, Electives.Student newStudent)
-	{
-		foreach (var oldPlan in plansToUpdate) { 
-			var updatedPlan = oldPlan.Clone();
-			updatedPlan.Student = newStudent;
-
-			Journal.Get.AddPlan(updatedPlan);
-			Journal.Get.RemovePlan(oldPlan);
-		}
-	}
-
-	/// <summary> Обновление всех планов, содержащих заменённый предмет </summary>
-	/// <param name="plansToUpdate"></param>
-	/// <param name="newClass"></param>
-	private static void UpdateClassesInPlans(IEnumerable<Electives.Plan> plansToUpdate, Electives.Class newClass)
-	{
-		foreach (var oldPlan in plansToUpdate) { 
-			var updatedPlan = oldPlan.Clone();
-			updatedPlan.Class = newClass;
-
-			Journal.Get.AddPlan(updatedPlan);
-			Journal.Get.RemovePlan(oldPlan);
 		}
 	}
 
@@ -121,14 +89,10 @@ public class Journal
 			if (this._classes.TryAdd(newClass.Id, newClass)){
 				this.ClassAdded?.Invoke(newClass, EventArgs.Empty);
 			} else {
-				var plansToUpdate = this._plans.FindAll(p => p.Class.Id == newClass.Id).AsEnumerable();
 				var oldClass= this._classes[newClass.Id];
-
 				this._classes[newClass.Id] = newClass;
+
 				this.ClassAdded?.Invoke(newClass, EventArgs.Empty);
-
-				UpdateClassesInPlans(plansToUpdate, newClass);
-
 				this.ClassRemoved?.Invoke(oldClass, EventArgs.Empty);
 			}
 		}
@@ -162,6 +126,9 @@ public class Journal
 		if (plan != null) {
 			this.PlanRemoved?.Invoke(plan, EventArgs.Empty);
 			this._plans.Remove(plan);
+
+			this.ClassRemoved -= plan.ClassChangedOrRemoved;
+			this.StudentRemoved -= plan.StudentChangedOrRemoved;
 		}
 	}
 
