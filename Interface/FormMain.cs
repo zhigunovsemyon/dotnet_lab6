@@ -11,14 +11,14 @@ public partial class FormMain : Form
 	{
 		this.InitializeComponent();
 
-		Journal.Get.PlanAdded += ItemAdded;
-		Journal.Get.PlanRemoved += ItemRemoved;
+		Journal.Get.PlanAdded += this.ItemAdded;
+		Journal.Get.PlanRemoved += this.ItemRemoved;
 
-		Journal.Get.StudentAdded += ItemAdded;
-		Journal.Get.StudentRemoved += ItemRemoved;
+		Journal.Get.StudentAdded += this.ItemAdded;
+		Journal.Get.StudentRemoved += this.ItemRemoved;
 
-		Journal.Get.ClassAdded += ItemAdded;
-		Journal.Get.ClassRemoved += ItemRemoved;
+		Journal.Get.ClassAdded += this.ItemAdded;
+		Journal.Get.ClassRemoved += this.ItemRemoved;
 	}
 
 	/// <summary> Метод для закрытия приложения через пункт меню </summary>
