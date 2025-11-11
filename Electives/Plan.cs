@@ -37,19 +37,6 @@ public class Plan : IValidatable
 		Journal.Get.StudentRemoved += this.StudentChangedOrRemoved;
 	}
 
-	/// <summary>Конструктор плана без оценки</summary>
-	/// <param name="student">Студент</param>
-	/// <param name="class">Предмет</param>
-	public Plan (Student student, Class @class)
-	{
-		this.Student = student;
-		this.Class = @class;
-		this.Mark = new Mark();
-
-		Journal.Get.ClassRemoved += this.ClassChangedOrRemoved;
-		Journal.Get.StudentRemoved += this.StudentChangedOrRemoved;
-	}
-
 	public bool IsValid => (Student?.IsValid ?? false) && (Class?.IsValid ?? false);
 
 	/// <summary> Создание копии текущего плана </summary>
@@ -104,6 +91,10 @@ public class Plan : IValidatable
 		journal.RemovePlan(this);
 	}
 
+	/// <summary> Вспомогательная функция для поиска студента по id </summary>
+	/// <param name="students">Список студентов</param>
+	/// <param name="id">Идентификатор</param>
+	/// <returns>Найденный студент или null</returns>
 	private static Student? FindNewStudent (IEnumerable<Student> students, int id)
 	{
 		foreach (var student in students) {
@@ -113,6 +104,11 @@ public class Plan : IValidatable
 		}
 		return null;
 	}
+
+	/// <summary> Вспомогательная функция для поиска предмета по id </summary>
+	/// <param name="classes">Список предметов</param>
+	/// <param name="id">Идентификатор</param>
+	/// <returns>Найденный предмет или null</returns>
 	private static Class? FindNewClass (IEnumerable<Class> classes, int id)
 	{
 		foreach (var @class in classes) {
